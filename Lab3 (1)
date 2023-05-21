@@ -1,0 +1,770 @@
+student@student22:~$ start-all.sh
+This script is Deprecated. Instead use start-dfs.sh and start-yarn.sh
+Starting namenodes on [localhost]
+localhost: starting namenode, logging to /usr/local/hadoop/hadoop-2.7.0/logs/hadoop-student-namenode-student22.out
+localhost: starting datanode, logging to /usr/local/hadoop/hadoop-2.7.0/logs/hadoop-student-datanode-student22.out
+Starting secondary namenodes [0.0.0.0]
+0.0.0.0: starting secondarynamenode, logging to /usr/local/hadoop/hadoop-2.7.0/logs/hadoop-student-secondarynamenode-student22.out
+starting yarn daemons
+starting resourcemanager, logging to /usr/local/hadoop/hadoop-2.7.0/logs/yarn-student-resourcemanager-student22.out
+localhost: starting nodemanager, logging to /usr/local/hadoop/hadoop-2.7.0/logs/yarn-student-nodemanager-student22.out
+student@student22:~$ jps
+3442 ResourceManager
+3571 NodeManager
+3641 Jps
+3242 SecondaryNameNode
+3054 DataNode
+2926 NameNode
+student@student22:~$ cd /usr/hive/bin
+bash: cd: /usr/hive/bin: No such file or directory
+student@student22:~$ cd /usr/local/hive/bin
+student@student22:/usr/local/hive/bin$ hive
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/home/edureka/apache-hive-2.1.0-bin/lib/log4j-slf4j-impl-2.4.1.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/usr/local/hadoop/hadoop-2.7.0/share/hadoop/common/lib/slf4j-log4j12-1.7.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+
+Logging initialized using configuration in jar:file:/home/edureka/apache-hive-2.1.0-bin/lib/hive-common-2.1.0.jar!/hive-log4j2.properties Async: true
+Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+hive> set hive.cli.print.current.db=true;
+hive (default)> CREATE DATABASE practice;
+OK
+Time taken: 0.935 seconds
+hive (default)> Use practice;
+OK
+Time taken: 0.019 seconds
+hive (practice)> create table college(
+               > FirstName STRING,
+               > ROLLNO INT);
+OK
+Time taken: 0.888 seconds
+hive (practice)> SHOW TABLES
+               > ;
+OK
+college
+Time taken: 0.091 seconds, Fetched: 1 row(s)
+
+hive (practice)> ALTER DATABASE practice SET DBPROPERTIES
+               > ('creator'='IT',
+               > 'created_for'='Lab');
+OK
+Time taken: 0.083 seconds
+hive (practice)>  DESCRIBE DATABASE EXTENDED practice;
+OK
+practice		hdfs://localhost:9000/user/hive/warehouse/practice.db	student	USER	{creator=IT, created_for=Lab}
+Time taken: 0.017 seconds, Fetched: 1 row(s)
+hive (practice)>  CREATE TABLE IF NOT EXISTS FlightInfo2007
+               >   (
+               >  Year SMALLINT, Month TINYINT, DayofMonth TINYINT,
+               >  DayOfWeek TINYINT, Origin STRING, Dest STRING)
+               > COMMENT 'Flight InfoTable'
+               >     ROW FORMAT DELIMITED
+               >     FIELDS TERMINATED BY ','
+               >     STORED AS TEXTFILE
+               >     TBLPROPERTIES ('creator'='PSB ', 'created_at'='Tues Dec 5 3:00:00 EDT 2017');
+OK
+Time taken: 0.142 seconds
+hive (practice)> load data local inpath '/home/student/Desktop/2007.csv' into table FlightInfo2007;
+Loading data to table practice.flightinfo2007
+OK
+Time taken: 1.12 seconds
+hive (practice)> CREATE TABLE IF NOT EXISTS FlightInfo2008 LIKE FlightInfo2007;
+OK
+Time taken: 0.124 seconds
+
+hive (practice)> load data local inpath '/home/student/Desktop/2008.csv' into table FlightInfo2008;
+Loading data to table practice.flightinfo2008
+OK
+Time taken: 0.172 seconds
+hive (practice)> CREATE TABLE IF NOT EXISTS myFlightInfo (
+               >     Year SMALLINT, DontQueryMonth TINYINT, DayofMonth
+               >     TINYINT, DayOfWeek TINYINT,Origin STRING, Dest STRING)
+               > COMMENT 'Flight InfoTable'
+               >     PARTITIONED BY(Month TINYINT)
+               >     ROW FORMAT DELIMITED
+               >     FIELDS TERMINATED BY ','
+               >     LINES TERMINATED BY '\n'
+               > STORED AS RCFILE TBLPROPERTIES ('creator'='PSB','created_at'='Mon sep 2 14:24:19 EDT 2017');
+OK
+Time taken: 0.117 seconds
+
+hive (practice)> SELECT Year, Month, DayofMonth, DayOfWeek,Origin,Dest FROM FlightInfo2008 WHERE Month=1;
+OK
+2008	1	3	4	2003	1955
+2008	1	3	4	754	735
+2008	1	3	4	628	620
+2008	1	3	4	926	930
+2008	1	3	4	1829	1755
+2008	1	3	4	1940	1915
+2008	1	3	4	1937	1830
+2008	1	3	4	1039	1040
+2008	1	3	4	617	615
+2008	1	3	4	1620	1620
+2008	1	3	4	706	700
+2008	1	3	4	1644	1510
+2008	1	3	4	1426	1430
+2008	1	3	4	715	715
+2008	1	3	4	1702	1700
+2008	1	3	4	1029	1020
+2008	1	3	4	1452	1425
+2008	1	3	4	754	745
+2008	1	3	4	1323	1255
+2008	1	3	4	1416	1325
+2008	1	3	4	706	705
+2008	1	3	4	1657	1625
+2008	1	3	4	1900	1840
+2008	1	3	4	1039	1030
+2008	1	3	4	801	800
+2008	1	3	4	1520	1455
+2008	1	3	4	1422	1255
+2008	1	3	4	1954	1925
+2008	1	3	4	636	635
+2008	1	3	4	734	730
+2008	1	3	4	2107	1945
+2008	1	3	4	1008	1005
+2008	1	3	4	712	710
+2008	1	3	4	1312	1300
+2008	1	3	4	1449	1430
+2008	1	3	4	1634	1555
+2008	1	3	4	831	830
+2008	1	3	4	1812	1650
+2008	1	3	4	1127	1105
+2008	1	3	4	1424	1355
+2008	1	3	4	1326	1230
+2008	1	3	4	1749	1725
+2008	1	3	4	726	720
+2008	1	3	4	646	640
+2008	1	3	4	1153	1140
+2008	1	3	4	1528	1510
+2008	1	3	4	634	635
+2008	1	3	4	831	830
+2008	1	3	4	1450	1435
+2008	1	3	4	2245	1730
+2008	1	3	4	615	615
+2008	1	3	4	1150	1145
+2008	1	3	4	2025	1940
+2008	1	3	4	1038	945
+2008	1	3	4	1900	1850
+2008	1	3	4	700	700
+2008	1	3	4	948	925
+2008	1	3	4	646	620
+2008	1	3	4	1110	1040
+2008	1	3	4	1535	1535
+2008	1	3	4	1919	1915
+2008	1	3	4	1053	1055
+2008	1	3	4	1433	1440
+2008	1	3	4	2015	2010
+2008	1	3	4	2139	2130
+2008	1	3	4	1500	1500
+2008	1	3	4	850	850
+2008	1	3	4	646	645
+2008	1	3	4	1221	1220
+2008	1	3	4	1738	1730
+2008	1	3	4	1813	1735
+2008	1	3	4	802	750
+2008	1	3	4	1820	1825
+2008	1	3	4	821	820
+2008	1	3	4	1734	1650
+2008	1	3	4	712	700
+2008	1	3	4	1318	1310
+2008	1	3	4	958	900
+2008	1	3	4	1859	1850
+2008	1	3	4	1538	1445
+2008	1	3	4	933	935
+2008	1	3	4	2248	2125
+2008	1	3	4	1327	1230
+2008	1	3	4	624	625
+2008	1	3	4	1614	1600
+2008	1	3	4	1917	1915
+2008	1	3	4	1832	1655
+2008	1	3	4	1229	1155
+2008	1	3	4	1256	1240
+2008	1	3	4	2118	2015
+2008	1	3	4	905	850
+2008	1	3	4	1739	1640
+2008	1	3	4	906	905
+2008	1	3	4	816	815
+2008	1	3	4	1325	1240
+2008	1	3	4	1506	1440
+2008	1	3	4	2039	1930
+2008	1	3	4	924	920
+2008	1	3	4	1611	1535
+2008	1	3	4	1824	1715
+2008	1	3	4	826	825
+2008	1	3	4	2118	2015
+2008	1	3	4	1818	1740
+2008	1	3	4	650	650
+2008	1	3	4	2146	2055
+2008	1	3	4	2241	1910
+2008	1	3	4	1409	1355
+2008	1	3	4	1100	1050
+2008	1	3	4	1306	1250
+2008	1	3	4	1726	1630
+2008	1	3	4	915	915
+2008	1	3	4	1229	1220
+2008	1	3	4	1459	1455
+2008	1	3	4	908	845
+2008	1	3	4	1817	1730
+2008	1	3	4	1248	1245
+2008	1	3	4	956	945
+2008	1	3	4	1849	1740
+2008	1	3	4	1210	1200
+2008	1	3	4	701	700
+2008	1	3	4	1047	1030
+2008	1	3	4	2232	2115
+2008	1	3	4	1512	1315
+2008	1	3	4	2025	1955
+2008	1	3	4	1439	1425
+2008	1	3	4	1627	1600
+2008	1	3	4	1745	1710
+2008	1	3	4	1049	1040
+2008	1	3	4	1117	1050
+2008	1	3	4	1725	1620
+2008	1	3	4	1824	1735
+2008	1	3	4	1150	1140
+2008	1	3	4	749	740
+2008	1	3	4	2051	2010
+2008	1	3	4	1555	1525
+2008	1	3	4	2255	1820
+2008	1	3	4	1129	1050
+2008	1	3	4	1602	1510
+2008	1	3	4	1738	1715
+2008	1	3	4	2207	2150
+2008	1	3	4	1851	1825
+2008	1	3	4	701	645
+2008	1	3	4	1556	1455
+2008	1	3	4	1254	1250
+2008	1	3	4	840	840
+2008	1	3	4	1540	1525
+2008	1	3	4	750	750
+2008	1	3	4	1228	1200
+2008	1	3	4	2047	2005
+2008	1	3	4	2158	2120
+2008	1	3	4	1028	1025
+2008	1	3	4	1423	1420
+2008	1	3	4	1147	1100
+2008	1	3	4	859	850
+2008	1	3	4	1140	1110
+2008	1	3	4	1226	1210
+2008	1	3	4	2118	2005
+2008	1	3	4	2003	1905
+2008	1	3	4	1622	1510
+2008	1	3	4	648	650
+2008	1	3	4	1003	940
+2008	1	3	4	1319	1300
+2008	1	3	4	1506	1500
+2008	1	3	4	648	645
+2008	1	3	4	1052	1050
+2008	1	3	4	1424	1415
+2008	1	3	4	1211	1145
+2008	1	3	4	814	755
+2008	1	3	4	934	935
+2008	1	3	4	1708	1700
+2008	1	3	4	1919	1845
+2008	1	3	4	1945	1815
+2008	1	3	4	2057	1930
+2008	1	3	4	1354	1310
+2008	1	3	4	1703	1645
+2008	1	3	4	1030	1030
+2008	1	3	4	1903	1825
+2008	1	3	4	1108	1110
+2008	1	3	4	NA	700
+2008	1	3	4	1354	1345
+2008	1	3	4	1944	1740
+2008	1	3	4	1251	1205
+2008	1	3	4	1548	1505
+2008	1	3	4	821	820
+2008	1	3	4	2216	2125
+2008	1	3	4	2010	1900
+2008	1	3	4	1433	1420
+2008	1	3	4	935	925
+2008	1	3	4	2156	2155
+2008	1	3	4	2035	2020
+2008	1	3	4	602	600
+2008	1	3	4	1152	1145
+2008	1	3	4	1435	1315
+2008	1	3	4	2049	1920
+2008	1	3	4	913	910
+2008	1	3	4	1613	1610
+2008	1	3	4	2015	1945
+2008	1	3	4	655	655
+2008	1	3	4	1438	1435
+2008	1	3	4	1102	1030
+2008	1	3	4	2218	2120
+2008	1	3	4	851	835
+2008	1	3	4	1230	1215
+2008	1	3	4	1838	1800
+2008	1	3	4	1358	1330
+2008	1	3	4	1757	1655
+2008	1	3	4	1816	1755
+2008	1	3	4	755	755
+2008	1	3	4	1328	1255
+2008	1	3	4	2134	2040
+2008	1	3	4	1127	1045
+2008	1	3	4	1720	1700
+2008	1	3	4	559	600
+2008	1	3	4	712	705
+2008	1	3	4	1327	1320
+2008	1	3	4	1817	1810
+2008	1	3	4	1807	1740
+2008	1	3	4	1712	1545
+2008	1	3	4	1206	1205
+2008	1	3	4	1134	1110
+2008	1	3	4	1003	1005
+2008	1	3	4	815	820
+2008	1	3	4	2156	2110
+2008	1	3	4	2140	2040
+2008	1	3	4	631	635
+2008	1	3	4	1521	1450
+2008	1	3	4	2100	1945
+2008	1	3	4	1657	1630
+2008	1	3	4	926	915
+2008	1	3	4	1413	1415
+2008	1	3	4	1825	1745
+2008	1	3	4	927	915
+2008	1	3	4	1630	1600
+2008	1	3	4	1136	1120
+2008	1	3	4	1824	1725
+2008	1	3	4	1716	1630
+2008	1	3	4	1928	1855
+2008	1	3	4	709	710
+2008	1	3	4	1741	1730
+2008	1	3	4	1609	1540
+2008	1	3	4	913	840
+2008	1	3	4	2215	2200
+2008	1	3	4	2137	2040
+2008	1	3	4	624	625
+2008	1	3	4	1100	1020
+2008	1	3	4	1313	1255
+2008	1	3	4	1415	1350
+2008	1	3	4	1108	1110
+2008	1	3	4	1348	1330
+2008	1	3	4	1221	1220
+2008	1	3	4	2140	2050
+2008	1	3	4	805	805
+2008	1	3	4	1643	1625
+2008	1	3	4	946	940
+2008	1	3	4	1915	1905
+2008	1	3	4	1839	1740
+2008	1	3	4	2207	2125
+2008	1	3	4	1503	1425
+2008	1	3	4	1613	1515
+2008	1	3	4	2248	2155
+2008	1	3	4	612	615
+2008	1	3	4	1118	1110
+2008	1	3	4	1456	1445
+2008	1	3	4	2022	1935
+2008	1	3	4	1049	1040
+2008	1	3	4	753	750
+2008	1	3	4	1831	1810
+2008	1	3	4	1704	1645
+2008	1	3	4	2017	2005
+2008	1	3	4	639	640
+2008	1	3	4	1117	1050
+2008	1	3	4	1426	1355
+2008	1	3	4	1009	910
+2008	1	3	4	2021	1700
+2008	1	3	4	2025	1905
+2008	1	3	4	603	605
+2008	1	3	4	2301	2105
+2008	1	3	4	1518	1215
+2008	1	3	4	1307	1235
+2008	1	3	4	615	610
+2008	1	3	4	2017	1945
+2008	1	3	4	1855	1855
+2008	1	3	4	2114	2040
+2008	1	3	4	1605	1520
+2008	1	3	4	956	1000
+2008	1	3	4	731	730
+2008	1	3	4	1734	1655
+2008	1	3	4	1139	1100
+2008	1	3	4	2104	1905
+2008	1	3	4	919	830
+2008	1	3	4	2113	2050
+2008	1	3	4	1712	1555
+2008	1	3	4	1419	1355
+2008	1	3	4	2242	2140
+2008	1	3	4	611	615
+2008	1	3	4	1949	1910
+2008	1	3	4	1409	1350
+2008	1	3	4	637	640
+2008	1	3	4	1821	1730
+2008	1	3	4	916	905
+2008	1	3	4	1134	1115
+2008	1	3	4	1527	1515
+2008	1	3	4	2115	2100
+2008	1	3	4	1934	1935
+2008	1	3	4	1305	1305
+2008	1	3	4	1917	1820
+2008	1	3	4	1125	1010
+2008	1	3	4	1505	1500
+2008	1	3	4	747	750
+2008	1	3	4	1143	1050
+2008	1	3	4	1558	1530
+2008	1	3	4	1940	1855
+2008	1	3	4	1820	1725
+2008	1	3	4	1143	1035
+2008	1	3	4	2211	2115
+2008	1	3	4	1821	1725
+2008	1	3	4	715	720
+2008	1	3	4	1341	1320
+2008	1	3	4	2108	2030
+2008	1	3	4	1118	1050
+2008	1	3	4	1735	1710
+2008	1	3	4	2105	2025
+2008	1	3	4	1328	1315
+2008	1	3	4	944	940
+2008	1	3	4	1024	1015
+2008	1	3	4	820	815
+2008	1	3	4	1632	1540
+2008	1	3	4	1327	1255
+2008	1	3	4	1330	1320
+2008	1	3	4	1925	1735
+2008	1	3	4	1005	945
+2008	1	3	4	1149	1145
+2008	1	3	4	1742	1625
+2008	1	3	4	807	805
+2008	1	3	4	2020	1935
+2008	1	3	4	1501	1425
+2008	1	3	4	1205	1135
+2008	1	3	4	1652	1640
+2008	1	3	4	922	855
+2008	1	3	4	1835	1740
+2008	1	3	4	1027	1015
+2008	1	3	4	626	625
+2008	1	3	4	1533	1530
+2008	1	3	4	1910	1845
+2008	1	3	4	744	740
+2008	1	3	4	2109	2100
+2008	1	3	4	2237	2140
+2008	1	3	4	2025	1955
+2008	1	3	4	1423	1335
+2008	1	3	4	1337	1310
+2008	1	3	4	1142	1125
+2008	1	3	4	1928	1835
+2008	1	3	4	634	630
+2008	1	3	4	1713	1625
+2008	1	3	4	853	850
+2008	1	3	4	1255	1240
+2008	1	3	4	1453	1445
+2008	1	3	4	1001	945
+2008	1	3	4	630	625
+2008	1	3	4	1831	1755
+2008	1	3	4	1030	1000
+2008	1	3	4	2004	1900
+2008	1	3	4	923	900
+2008	1	3	4	1419	1400
+2008	1	3	4	1522	1500
+2008	1	3	4	1803	1730
+2008	1	3	4	2146	2100
+2008	1	3	4	2001	1930
+2008	1	3	4	1827	1800
+2008	1	3	4	1904	1830
+2008	1	3	4	1450	1430
+2008	1	3	4	1722	1700
+2008	1	3	4	1820	1630
+2008	1	3	4	NA	1100
+2008	1	3	4	1623	1600
+2008	1	3	4	2008	2000
+2008	1	3	4	1301	1300
+2008	1	3	4	601	600
+2008	1	3	4	808	800
+2008	1	3	4	1206	1200
+2008	1	3	4	700	700
+2008	1	3	4	1609	1600
+2008	1	3	4	1811	1725
+2008	1	3	4	815	815
+2008	1	3	4	600	600
+2008	1	3	4	1851	1830
+Time taken: 0.377 seconds, Fetched: 386 row(s)
+hive (practice)> FROM FlightInfo2008 INSERT INTO TABLE myflightinfo
+               > PARTITION (Month=2) SELECT Year, Month, DayofMonth, DayOfWeek,Origin, Dest WHERE Month=2
+               > INSERT INTO TABLE myflightinfo
+               > PARTITION (Month=12)
+               >  SELECT Year, Month, DayofMonth, DayOfWeek,
+               > Origin,Dest WHERE Month=12;
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = student_20230516090102_fbc2a80d-564b-400f-9ed5-2b2bab8e1c2e
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1684206531580_0001, Tracking URL = http://student22:8088/proxy/application_1684206531580_0001/
+Kill Command = /usr/local/hadoop/hadoop-2.7.0/bin/hadoop job  -kill job_1684206531580_0001
+Hadoop job information for Stage-2: number of mappers: 1; number of reducers: 0
+2023-05-16 09:01:09,498 Stage-2 map = 0%,  reduce = 0%
+2023-05-16 09:01:13,659 Stage-2 map = 100%,  reduce = 0%, Cumulative CPU 2.0 sec
+MapReduce Total cumulative CPU time: 2 seconds 0 msec
+Ended Job = job_1684206531580_0001
+Stage-5 is selected by condition resolver.
+Stage-4 is filtered out by condition resolver.
+Stage-6 is filtered out by condition resolver.
+Stage-11 is selected by condition resolver.
+Stage-10 is filtered out by condition resolver.
+Stage-12 is filtered out by condition resolver.
+Moving data to directory hdfs://localhost:9000/user/hive/warehouse/practice.db/myflightinfo/month=2/.hive-staging_hive_2023-05-16_09-01-02_145_1756523499049126719-1/-ext-10000
+Moving data to directory hdfs://localhost:9000/user/hive/warehouse/practice.db/myflightinfo/month=12/.hive-staging_hive_2023-05-16_09-01-02_145_1756523499049126719-1/-ext-10002
+Loading data to table practice.myflightinfo partition (month=2)
+Loading data to table practice.myflightinfo partition (month=12)
+MapReduce Jobs Launched: 
+Stage-Stage-2: Map: 1   Cumulative CPU: 2.0 sec   HDFS Read: 44802 HDFS Write: 223 SUCCESS
+Total MapReduce CPU Time Spent: 2 seconds 0 msec
+OK
+Time taken: 13.413 seconds
+hive (practice)> SHOW PARTITIONS myflightinfo;
+OK
+month=12
+month=2
+Time taken: 0.082 seconds, Fetched: 2 row(s)
+
+hive (practice)> CREATE TABLE myflightinfo2007 AS
+               > SELECT Year, Month,Origin,Dest FROM myflightinfo
+               > WHERE (Month = 7 AND DayofMonth=3) AND
+               > (Origin='JFK' AND Dest='ORD');
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = student_20230516091011_c6d6dd0e-9899-43d5-a22d-32e0b8b56d2b
+Total jobs = 3
+Launching Job 1 out of 3
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1684206531580_0002, Tracking URL = http://student22:8088/proxy/application_1684206531580_0002/
+Kill Command = /usr/local/hadoop/hadoop-2.7.0/bin/hadoop job  -kill job_1684206531580_0002
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 0
+2023-05-16 09:10:15,241 Stage-1 map = 0%,  reduce = 0%
+2023-05-16 09:10:19,390 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.88 sec
+MapReduce Total cumulative CPU time: 1 seconds 880 msec
+Ended Job = job_1684206531580_0002
+Stage-4 is selected by condition resolver.
+Stage-3 is filtered out by condition resolver.
+Stage-5 is filtered out by condition resolver.
+Moving data to directory hdfs://localhost:9000/user/hive/warehouse/practice.db/.hive-staging_hive_2023-05-16_09-10-11_402_8719348565910822868-1/-ext-10002
+Moving data to directory hdfs://localhost:9000/user/hive/warehouse/practice.db/myflightinfo2007
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1   Cumulative CPU: 1.88 sec   HDFS Read: 5471 HDFS Write: 51 SUCCESS
+Total MapReduce CPU Time Spent: 1 seconds 880 msec
+OK
+Time taken: 9.185 seconds
+hive (practice)> SELECT * FROM myflightinfo2007;
+OK
+Time taken: 0.089 seconds
+hive (practice)> SELECT * FROM myflightinfo2007;
+OK
+Time taken: 0.117 seconds
+hive (practice)> SELECT * FROM myflightinfo;
+OK
+Time taken: 0.146 seconds
+hive (practice)> SELECT*FROM myflightinfo2007;
+OK
+Time taken: 0.086 seconds
+hive (practice)> SELECT * FROM myFlightInfo2007;
+OK
+Time taken: 0.09 seconds
+hive (practice)> CREATE TABLE myFlightInfo2008 AS
+               > SELECT Year, Month,Origin, Dest FROM FlightInfo2008
+               > WHERE (Month = 7 AND DayofMonth = 3) AND
+               > (Origin='JFK' AND Dest='ORD');
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = student_20230516091425_97dcf293-0eec-4609-b7fb-ecb4a1858c9c
+Total jobs = 3
+Launching Job 1 out of 3
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1684206531580_0003, Tracking URL = http://student22:8088/proxy/application_1684206531580_0003/
+Kill Command = /usr/local/hadoop/hadoop-2.7.0/bin/hadoop job  -kill job_1684206531580_0003
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 0
+2023-05-16 09:14:29,642 Stage-1 map = 0%,  reduce = 0%
+2023-05-16 09:14:33,749 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.89 sec
+MapReduce Total cumulative CPU time: 1 seconds 890 msec
+Ended Job = job_1684206531580_0003
+Stage-4 is selected by condition resolver.
+Stage-3 is filtered out by condition resolver.
+Stage-5 is filtered out by condition resolver.
+Moving data to directory hdfs://localhost:9000/user/hive/warehouse/practice.db/.hive-staging_hive_2023-05-16_09-14-25_964_1058823780665725192-1/-ext-10002
+Moving data to directory hdfs://localhost:9000/user/hive/warehouse/practice.db/myflightinfo2008
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1   Cumulative CPU: 1.89 sec   HDFS Read: 42589 HDFS Write: 51 SUCCESS
+Total MapReduce CPU Time Spent: 1 seconds 890 msec
+OK
+Time taken: 9.204 seconds
+hive (practice)> SELECT * FROM myFlightInfo2008;
+OK
+Time taken: 0.113 seconds
+hive (practice)> SHOW TABlES myFLightInfo2008;
+OK
+Time taken: 0.012 seconds
+hive (practice)> SELECT * FROM myFlightInfo2008;
+OK
+Time taken: 0.09 seconds
+
+hive (practice)> SELECT m8.Year, m8.Month, m8.Origin, m8.Dest, m7.Year, m7.Month, m7.Origin, m7.Dest FROM myFlightinfo2008 m8 JOIN myFlightinfo2007 m7 ON m8.Month=m7.Month;
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = student_20230516091746_caa2da5f-a5a1-4845-b25d-edb710fa0a8b
+Total jobs = 1
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/home/edureka/apache-hive-2.1.0-bin/lib/log4j-slf4j-impl-2.4.1.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/usr/local/hadoop/hadoop-2.7.0/share/hadoop/common/lib/slf4j-log4j12-1.7.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+2023-05-16 09:17:49	Starting to launch local task to process map join;	maximum memory = 477626368
+2023-05-16 09:17:50	Dump the side-table for tag: 0 with group count: 0 into file: file:/tmp/student/0ccab126-eb55-44b4-bc6f-c9589cce313f/hive_2023-05-16_09-17-46_406_6235483731910255697-1/-local-10004/HashTable-Stage-3/MapJoin-mapfile00--.hashtable
+2023-05-16 09:17:50	Uploaded 1 File to: file:/tmp/student/0ccab126-eb55-44b4-bc6f-c9589cce313f/hive_2023-05-16_09-17-46_406_6235483731910255697-1/-local-10004/HashTable-Stage-3/MapJoin-mapfile00--.hashtable (260 bytes)
+2023-05-16 09:17:50	End of local task; Time Taken: 0.788 sec.
+Execution completed successfully
+MapredLocal task succeeded
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1684206531580_0004, Tracking URL = http://student22:8088/proxy/application_1684206531580_0004/
+Kill Command = /usr/local/hadoop/hadoop-2.7.0/bin/hadoop job  -kill job_1684206531580_0004
+Hadoop job information for Stage-3: number of mappers: 0; number of reducers: 0
+2023-05-16 09:17:55,124 Stage-3 map = 0%,  reduce = 0%
+Ended Job = job_1684206531580_0004
+MapReduce Jobs Launched: 
+Stage-Stage-3:  HDFS Read: 0 HDFS Write: 0 SUCCESS
+Total MapReduce CPU Time Spent: 0 msec
+OK
+Time taken: 10.805 seconds
+hive (practice)> SELECT m8.Origin,m8.Dest,m7.Origin,m7.Dest FROM myFlightinfo2008 m8 FULL OUTER JOIN myFlightinfo2007 m7 ON m8.Month=m7.Month;
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = student_20230516091910_02181c95-9554-45dd-a8a4-f7287fbb13c4
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1684206531580_0005, Tracking URL = http://student22:8088/proxy/application_1684206531580_0005/
+Kill Command = /usr/local/hadoop/hadoop-2.7.0/bin/hadoop job  -kill job_1684206531580_0005
+Hadoop job information for Stage-1: number of mappers: 0; number of reducers: 1
+2023-05-16 09:19:14,333 Stage-1 map = 0%,  reduce = 0%
+2023-05-16 09:19:19,460 Stage-1 map = 0%,  reduce = 100%, Cumulative CPU 1.1 sec
+MapReduce Total cumulative CPU time: 1 seconds 100 msec
+Ended Job = job_1684206531580_0005
+MapReduce Jobs Launched: 
+Stage-Stage-1: Reduce: 1   Cumulative CPU: 1.1 sec   HDFS Read: 5526 HDFS Write: 87 SUCCESS
+Total MapReduce CPU Time Spent: 1 seconds 100 msec
+OK
+Time taken: 10.374 seconds
+hive (practice)> SELECT  m8.Year,m8.Month,m8.Origin,m8.Dest,m7.Year,m7.Month,m7.Origin,m7.Dest FROM myFlightinfo2008 m8 LEFT OUTER JOIN myFlightinfo2007 m7 ON m8.month=m7.month;
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = student_20230516092118_80c45d01-b64d-4782-867e-7438334d6ce8
+Total jobs = 1
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/home/edureka/apache-hive-2.1.0-bin/lib/log4j-slf4j-impl-2.4.1.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/usr/local/hadoop/hadoop-2.7.0/share/hadoop/common/lib/slf4j-log4j12-1.7.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+2023-05-16 09:21:21	Starting to launch local task to process map join;	maximum memory = 477626368
+2023-05-16 09:21:21	Dump the side-table for tag: 1 with group count: 0 into file: file:/tmp/student/0ccab126-eb55-44b4-bc6f-c9589cce313f/hive_2023-05-16_09-21-18_307_4762839719885936669-1/-local-10004/HashTable-Stage-3/MapJoin-mapfile11--.hashtable
+2023-05-16 09:21:21	Uploaded 1 File to: file:/tmp/student/0ccab126-eb55-44b4-bc6f-c9589cce313f/hive_2023-05-16_09-21-18_307_4762839719885936669-1/-local-10004/HashTable-Stage-3/MapJoin-mapfile11--.hashtable (260 bytes)
+2023-05-16 09:21:21	End of local task; Time Taken: 0.542 sec.
+Execution completed successfully
+MapredLocal task succeeded
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1684206531580_0006, Tracking URL = http://student22:8088/proxy/application_1684206531580_0006/
+Kill Command = /usr/local/hadoop/hadoop-2.7.0/bin/hadoop job  -kill job_1684206531580_0006
+Hadoop job information for Stage-3: number of mappers: 0; number of reducers: 0
+2023-05-16 09:21:26,265 Stage-3 map = 0%,  reduce = 0%
+Ended Job = job_1684206531580_0006
+MapReduce Jobs Launched: 
+Stage-Stage-3:  HDFS Read: 0 HDFS Write: 0 SUCCESS
+Total MapReduce CPU Time Spent: 0 msec
+OK
+Time taken: 11.182 seconds
+hive (practice)> CREATE INDEX f08_index ON TABLE flightinfo2008 (Origin) AS
+               > 'COMPACT' WITH DEFERRED REBUILD;
+OK
+Time taken: 0.208 seconds
+hive (practice)> SELECT * FROM myFlightInfo2008;
+OK
+Time taken: 0.09 seconds
+hive (practice)> ALTER INDEX f08_index ON flightinfo2008 REBUILD;
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = student_20230516092346_f081a58f-d454-4034-b4b3-06a2f20938b3
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1684206531580_0007, Tracking URL = http://student22:8088/proxy/application_1684206531580_0007/
+Kill Command = /usr/local/hadoop/hadoop-2.7.0/bin/hadoop job  -kill job_1684206531580_0007
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2023-05-16 09:23:50,370 Stage-1 map = 0%,  reduce = 0%
+2023-05-16 09:23:54,471 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 0.92 sec
+2023-05-16 09:23:58,595 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 2.34 sec
+MapReduce Total cumulative CPU time: 2 seconds 340 msec
+Ended Job = job_1684206531580_0007
+Loading data to table practice.practice__flightinfo2008_f08_index__
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 2.34 sec   HDFS Read: 48546 HDFS Write: 27804 SUCCESS
+Total MapReduce CPU Time Spent: 2 seconds 340 msec
+OK
+Time taken: 14.413 seconds
+hive (practice)> SHOW INDEXES ON FlightInfo2008;
+OK
+f08_index           	flightinfo2008      	origin              	practice__flightinfo2008_f08_index__	compact             	
+Time taken: 0.027 seconds, Fetched: 1 row(s)
+hive (practice)> ELECT Origin, COUNT(1) FROM
+               > SELECT Origin, COUNT(1) FROM
+               > flightinfo2008 WHERE Origin = 'SYR' GROUP BY Origin;
+NoViableAltException(26@[])
+	at org.apache.hadoop.hive.ql.parse.HiveParser.statement(HiveParser.java:1140)
+	at org.apache.hadoop.hive.ql.parse.ParseDriver.parse(ParseDriver.java:204)
+	at org.apache.hadoop.hive.ql.parse.ParseDriver.parse(ParseDriver.java:166)
+	at org.apache.hadoop.hive.ql.Driver.compile(Driver.java:404)
+	at org.apache.hadoop.hive.ql.Driver.compile(Driver.java:329)
+	at org.apache.hadoop.hive.ql.Driver.compileInternal(Driver.java:1158)
+	at org.apache.hadoop.hive.ql.Driver.runInternal(Driver.java:1253)
+	at org.apache.hadoop.hive.ql.Driver.run(Driver.java:1084)
+	at org.apache.hadoop.hive.ql.Driver.run(Driver.java:1072)
+	at org.apache.hadoop.hive.cli.CliDriver.processLocalCmd(CliDriver.java:232)
+	at org.apache.hadoop.hive.cli.CliDriver.processCmd(CliDriver.java:183)
+	at org.apache.hadoop.hive.cli.CliDriver.processLine(CliDriver.java:399)
+	at org.apache.hadoop.hive.cli.CliDriver.executeDriver(CliDriver.java:776)
+	at org.apache.hadoop.hive.cli.CliDriver.run(CliDriver.java:714)
+	at org.apache.hadoop.hive.cli.CliDriver.main(CliDriver.java:641)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.util.RunJar.run(RunJar.java:221)
+	at org.apache.hadoop.util.RunJar.main(RunJar.java:136)
+FAILED: ParseException line 1:0 cannot recognize input near 'ELECT' 'Origin' ','
+hive (practice)> SELECT Origin, COUNT(1) FROM
+               > flightinfo2008 WHERE Origin = 'SYR' GROUP BY Origin;
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = student_20230516092605_4e2ec0aa-d39f-4c37-ae25-86b149dd54e6
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1684206531580_0008, Tracking URL = http://student22:8088/proxy/application_1684206531580_0008/
+Kill Command = /usr/local/hadoop/hadoop-2.7.0/bin/hadoop job  -kill job_1684206531580_0008
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2023-05-16 09:26:09,969 Stage-1 map = 0%,  reduce = 0%
+2023-05-16 09:26:14,109 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.05 sec
+2023-05-16 09:26:19,271 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 2.29 sec
+MapReduce Total cumulative CPU time: 2 seconds 290 msec
+Ended Job = job_1684206531580_0008
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 2.29 sec   HDFS Read: 47447 HDFS Write: 87 SUCCESS
+Total MapReduce CPU Time Spent: 2 seconds 290 msec
+OK
+Time taken: 14.517 seconds
+hive (practice)>  DESCRIBE default__flightinfo2008_f08_index__;
+FAILED: SemanticException [Error 10001]: Table not found default__flightinfo2008_f08_index__
+hive (practice)> DESCRIBE default__flightinfo2008_f08_index__;
+FAILED: SemanticException [Error 10001]: Table not found default__flightinfo2008_f08_index__
+hive (practice)> DESCRIBE dflightinfo2008_f08_index__;
+[1]+  Stopped                 hive
+
