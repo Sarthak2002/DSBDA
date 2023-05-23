@@ -1,0 +1,4 @@
+TABLUE lab
+!D-filter=AGE,Row=Age
+2D-col=rel,Row=Age,Marks=Gender
+3D-marks=Gender,income  Row=hrs-per-week  col=Age
